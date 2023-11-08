@@ -19,18 +19,18 @@ public class hangman {
 
         while (attemptsLeft > 0) {
             System.out.println(maskedWord);
-            System.out.println("Input a letter: > ");
+            System.out.print("Input a letter: > ");
             String guessedLetter = scanner.nextLine();
 
             if (guessedLetter.length() != 1 || !Character.isLetter(guessedLetter.charAt(0))) {
-                System.out.println("Please enter a single letter.");
+                System.out.println("Please enter a single lowercase English letter.");
                 continue;
             }
 
             char letter = guessedLetter.charAt(0);
 
             if (guessedLetters[letter - 'a']) {
-                System.out.println("No improvements");
+                System.out.println("You've already guessed this letter");
             } else if (targetWord.contains(String.valueOf(letter))) {
                 for (int i = 0; i < targetWord.length(); i++) {
                     if (targetWord.charAt(i) == letter) {
@@ -40,14 +40,14 @@ public class hangman {
                 guessedLetters[letter - 'a'] = true;
                 if (!maskedWord.toString().contains("-")) {
                     System.out.println(maskedWord);
-                    System.out.println("You guessed the word!");
+                    System.out.println("You guessed the word " + targetWord + "!");
                     System.out.println("You survived!");
                     break;
                 }
             } else {
                 System.out.println("That letter doesn't appear in the word");
-                attemptsLeft--;
                 guessedLetters[letter - 'a'] = true;
+                attemptsLeft--;
             }
         }
 
