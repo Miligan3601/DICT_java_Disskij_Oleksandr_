@@ -1,56 +1,54 @@
 package Hangman;
 
-import java.util.Random;
 import java.util.Scanner;
+import java.util.Random;
 
 public class hangman {
     public static void main(String[] args) {
+        System.out.println("HANGMAN");
+        System.out.println("Вітаємо у грі 'Шибениця'!");
+        System.out.println("Гра буде доступна незабаром.");
+
         Scanner scanner = new Scanner(System.in);
+        String[] words = {"python", "java", "javascript", "kotlin"};
         Random random = new Random();
+        String targetWord = words[random.nextInt(words.length)];
+        String maskedWord = targetWord.substring(0, 2) + "-".repeat(targetWord.length() - 2);
+        int attempts = 8;
 
-        System.out.println("HANGMAN");
-        System.out.println("The game will be available soon.");
+        while (attempts > 0) {
+            System.out.println("Guess the word: " + maskedWord);
+            System.out.println("Attempts left: " + attempts);
 
-        System.out.println("HANGMAN");
-        System.out.println("Welcome to Hangman!");
-        System.out.println("Try to guess the word.");
+            String guessedLetter = scanner.nextLine();
 
-        String targetWord = "java";
+            if (guessedLetter.length() != 1) {
+                System.out.println("Please enter a single letter.");
+                continue;
+            }
 
-        System.out.print("Guess the word: > ");
-        String guessedWord = scanner.nextLine().trim();
+            char letter = guessedLetter.charAt(0);
 
-        if (guessedWord.equalsIgnoreCase(targetWord)) {
-            System.out.println("You survived!");
-        } else {
-            System.out.println("You lost!");
+            if (targetWord.contains(String.valueOf(letter))) {
+                StringBuilder newMaskedWord = new StringBuilder(maskedWord);
+                for (int i = 0; i < targetWord.length(); i++) {
+                    if (targetWord.charAt(i) == letter) {
+                        newMaskedWord.setCharAt(i, letter);
+                    }
+                }
+                maskedWord = newMaskedWord.toString();
+                if (!maskedWord.contains("-")) {
+                    System.out.println("You survived!");
+                    break;
+                }
+            } else {
+                System.out.println("Incorrect letter.");
+                attempts--;
+            }
         }
 
-        System.out.println("HANGMAN");
-        System.out.println("Welcome to Hangman!");
-        System.out.println("Try to guess the word.");
-
-        String[] wordList = {"python", "java", "javascript", "kotlin"};
-        String targetWordFromList = wordList[random.nextInt(wordList.length)];
-        int maxAttempts = 8;
-
-        StringBuilder guessedWordFromList = new StringBuilder("_".repeat(targetWordFromList.length()));
-        int attemptsLeft = maxAttempts;
-
-        while (attemptsLeft > 0) {
-            System.out.println("Guess the word: " + guessedWordFromList);
-            System.out.println("Attempts left: " + attemptsLeft);
-
-            System.out.print("> ");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase(targetWordFromList)) {
-                System.out.println("You survived!");
-                break;
-            } else {
-                System.out.println("You lost!");
-                break;
-            }
+        if (attempts == 0) {
+            System.out.println("You lost!");
         }
     }
 }
