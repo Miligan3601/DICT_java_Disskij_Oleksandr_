@@ -14,41 +14,45 @@ public class hangman {
         Random random = new Random();
         String targetWord = words[random.nextInt(words.length)];
         StringBuilder maskedWord = new StringBuilder("-".repeat(targetWord.length()));
-        int attempts = 8;
+        int attemptsLeft = 8;
+        boolean[] guessedLetters = new boolean[26];
 
-        while (attempts > 0) {
+        while (attemptsLeft > 0) {
             System.out.println(maskedWord);
             System.out.println("Input a letter: > ");
             String guessedLetter = scanner.nextLine();
 
-            if (guessedLetter.length() != 1) {
+            if (guessedLetter.length() != 1 || !Character.isLetter(guessedLetter.charAt(0))) {
                 System.out.println("Please enter a single letter.");
                 continue;
             }
 
             char letter = guessedLetter.charAt(0);
 
-            if (targetWord.contains(String.valueOf(letter))) {
+            if (guessedLetters[letter - 'a']) {
+                System.out.println("No improvements");
+            } else if (targetWord.contains(String.valueOf(letter))) {
                 for (int i = 0; i < targetWord.length(); i++) {
                     if (targetWord.charAt(i) == letter) {
                         maskedWord.setCharAt(i, letter);
                     }
                 }
+                guessedLetters[letter - 'a'] = true;
                 if (!maskedWord.toString().contains("-")) {
                     System.out.println(maskedWord);
-                    System.out.println("Thanks for playing!");
-                    System.out.println("We'll see how well you did in the next stage");
+                    System.out.println("You guessed the word!");
+                    System.out.println("You survived!");
                     break;
                 }
             } else {
                 System.out.println("That letter doesn't appear in the word");
-                attempts--;
+                attemptsLeft--;
+                guessedLetters[letter - 'a'] = true;
             }
         }
 
-        if (attempts == 0) {
-            System.out.println("Thanks for playing!");
-            System.out.println("We'll see how well you did in the next stage");
+        if (attemptsLeft == 0) {
+            System.out.println("You lost!");
         }
     }
 }
